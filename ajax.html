@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Page Title</title>
+	<link href="css/main.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<script>
+		$(function ()
+		{
+
+
+		});
+	</script>
+</head>
+
+<body>
+
+
+	<div class="suggestion">
+		<div class="conArea">
+			<p class="mainTit">이 물품은 어떠세요?</p>
+			<div class="boxs">
+				<!-- JSON데이터 읽어오기 -->
+			</div>
+		</div>
+	</div>
+
+
+
+	<script>
+		$.ajax(
+			{
+				url: "./json/mainRecommandProduct.json",
+
+				dataType: "json",
+
+				success: function (data)
+				{
+					const pasing = function (data)
+					{
+						let name = data.name;
+						let price = data.price;
+						price = price.toLocaleString();
+						let pictureURL = data.pictureURL;
+						let option = data.option;
+						if (option === 'popular')
+						{
+							option = '<div><p class="pdtState"><span>인기</span></p></div>';
+						}
+						else if (option === 'discount')
+						{
+							option = '<div><div class="pdtState list-type"><p class="title">알뜰</p><ul><li>가격인하</li></ul></div></div>';
+						}
+						let url = data.url;
+						let text = '<a href="' + url + '">' +
+							'<div class="imgWrap">' +
+							option +
+							'<img src=' + pictureURL + ' alt="' + name + '">' +
+							'</div><div class="textWrap">' +
+							'<p class="famousName"><a href="#">' + name + '</a></p>' +
+							'<div class="famousPrice">' +
+							'<a href="' + url + '">' +
+							'<p class="price">' + price + '<span>원</span></p>' +
+							'</a>' +
+							'</div>' +
+							'<button class="btnCart"></button>' +
+							'</div>' +
+							'</a >';
+						return text;
+					};
+					for (let i in data)
+					{
+						let text = pasing(data[i]);
+						let container = $('.suggestion>.conArea>.boxs');
+						container.append('<div class="box"></div>');
+						container.children('.box').eq(i).append(text);
+					}
+				}
+			});
+
+		$('.imgWrap>p>img').mouseover(function ()
+		{
+			console.log('it work');
+			$(this).stop().animate({ scale: 1.2 });
+		}).mouseleave(function ()
+		{
+			$(this).stop().animate({ scale: 1 });
+		});
+	</script>
+
+</body>
+
+</html>
